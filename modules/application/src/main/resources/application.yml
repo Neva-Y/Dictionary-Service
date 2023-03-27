@@ -1,6 +1,3 @@
-server:
-  port: 4887
-
 application:
   name: dictionary-service
 
