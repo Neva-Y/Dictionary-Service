@@ -1,4 +1,4 @@
-rootProject.name = "Dictionary-Service"
+rootProject.name = "dictionary-Service"
 
 include(
         ":modules:application",
