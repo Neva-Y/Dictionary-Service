@@ -46,6 +46,7 @@ subprojects {
     }
 
     dependencies {
+        implementation("io.vavr:vavr:${Versions.IO_VAVR_VERSION}")
         testImplementation("org.assertj:assertj-core:${Versions.ASSERTJ_VERSION}")
         testImplementation("org.jeasy:easy-random-core:${Versions.EASY_RANDOM_VERSION}")
         testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.JUNIT_JUPITER_VERSION}")
