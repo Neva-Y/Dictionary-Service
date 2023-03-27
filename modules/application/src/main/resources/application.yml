@@ -3,24 +3,8 @@ server:
 
 application:
   name: dictionary-service
-  server:
-    shutdown: graceful
 
 spring:
   main:
     allow-bean-definition-overriding: true
-  datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dictionary}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
-    driverClassName: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
-      idle-timeout: 60000
-      max-lifetime: 600000
-  flyway:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dictionary}
-    user: ${SPRING_FLYWAY_USER:postgres}
-    password: ${SPRING_FLYWAY_PASSWORD:postgres}
-    baseline-on-migrate: true
+    web-application-type: none

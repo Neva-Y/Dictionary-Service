@@ -2,7 +2,6 @@ plugins {
     id("java")
     id("io.spring.dependency-management") version Versions.SPRING_DEPENDENCY_MANAGEMENT_VERSION
     id("org.springframework.boot") version Versions.SPRING_BOOT_VERSION apply false
-    jacoco
     `java-library`
 }
 

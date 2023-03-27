@@ -18,8 +18,7 @@ dependencies {
     implementation(project(":modules:graphql"))
     implementation(project(":modules:repository"))
     implementation("org.slf4j:slf4j-api:${Versions.SLF4J_VERSION}")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework:spring-context:${Versions.SPRING_CONTEXT_VERSION}")
 }
 

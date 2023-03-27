@@ -1,14 +1,16 @@
-package com.project.application;
+package com.project.repository;
 
-import com.project.repository.DictionaryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TestJob {
-    private DictionaryRepository dictionaryRepository;
+
+    @Autowired
+    DictionaryRepository dictionaryRepository;
     private final Logger logger = LoggerFactory.getLogger(TestJob.class);
     @Scheduled(fixedDelay = 1000)
     public void scheduleFixedDelay() {
