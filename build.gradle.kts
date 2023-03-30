@@ -17,12 +17,6 @@ allprojects {
 
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-
-dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-}
-
 buildscript {
     repositories {
         maven("https://plugins.gradle.org/m2/")
@@ -32,9 +26,6 @@ buildscript {
     }
 }
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
-}
 
 subprojects {
     apply(plugin = "io.spring.dependency-management")
@@ -42,15 +33,6 @@ subprojects {
 
     java {
         withSourcesJar()
-    }
-
-    dependencies {
-        implementation("io.vavr:vavr:${Versions.IO_VAVR_VERSION}")
-        testImplementation("org.assertj:assertj-core:${Versions.ASSERTJ_VERSION}")
-        testImplementation("org.jeasy:easy-random-core:${Versions.EASY_RANDOM_VERSION}")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.JUNIT_JUPITER_VERSION}")
-        testImplementation("org.junit.jupiter:junit-jupiter-engine:${Versions.JUNIT_JUPITER_VERSION}")
-        testImplementation("org.junit.jupiter:junit-jupiter-params:${Versions.JUNIT_JUPITER_VERSION}")
     }
 
     configurations {
