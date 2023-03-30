@@ -21,9 +21,8 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
                 return Boolean.TRUE;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error("insertWord failed with exception", e);
-            return Boolean.FALSE;
+            return null;
         }
     }
 
@@ -38,7 +37,7 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
             }
         } catch (Exception e) {
             logger.error("insertWord failed with exception", e);
-            return Boolean.FALSE;
+            return null;
         }
     }
 
@@ -53,15 +52,15 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
             }
         } catch (Exception e) {
             logger.error("removeWord failed with exception", e);
-            return Boolean.FALSE;
+            return null;
         }
     }
 
     @Override
-    public synchronized DictionaryEntry queryWord(String word) {
+    public DictionaryEntry queryWord(String word) {
         try {
             String[] meanings = dictionary.getOrDefault(word, null);
-            if (meanings.length > 0) {
+            if (meanings != null && meanings.length > 0) {
                 return new DictionaryEntry(word, meanings);
             } else {
                 return null;

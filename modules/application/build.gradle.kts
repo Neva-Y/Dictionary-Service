@@ -16,6 +16,7 @@ dependencies {
     runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl:${Versions.APACHE_LOGGING_LOG4J_VERSION}")
 
     implementation(project(":modules:repository"))
+    implementation("org.jeasy:easy-random-core:${Versions.EASY_RANDOM_VERSION}")
     implementation("org.slf4j:slf4j-api:${Versions.SLF4J_VERSION}")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework:spring-context:${Versions.SPRING_CONTEXT_VERSION}")
@@ -23,7 +24,7 @@ dependencies {
 }
 
 springBoot {
-    mainClass.set("com.project.application.DictionaryServiceApplication")
+    mainClass.set("com.project.application.server.DictionaryServer")
 }
 
 tasks {

@@ -2,7 +2,6 @@ package com.project.application.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.application.util.Codecs;
-import com.project.repository.DictionaryRepository;
 import com.project.repository.DictionaryRepositoryImpl;
 import com.project.repository.dictionary.DictionaryEntry;
 import com.project.repository.dictionary.DictionaryOperation;
@@ -11,13 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.IllegalFormatConversionException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -31,7 +30,6 @@ public class DictionaryServer {
     public DictionaryServer(DictionaryRepositoryImpl dictionaryRepository) {
         DictionaryServer.dictionaryRepository = dictionaryRepository;
     }
-
     private static final int port = 4887;
     private static final Logger logger = LoggerFactory.getLogger(DictionaryServer.class);
     public static void main(String[] args) {
@@ -48,23 +46,22 @@ public class DictionaryServer {
             server.setReuseAddress(true);
 
             // Setup Thread Pool Executor to handle the client requests
-            int corePoolSize = 10;
-            int maxPoolSize = 30;
-            int keepAdditionalThreadsAliveTime = 1000;
+            int corePoolSize = 30;
+            int maxPoolSize = 50;
+            int keepAdditionalThreadsAliveTime = 5000;
             ExecutorService threadPoolExecutor = new ThreadPoolExecutor(
                     corePoolSize,
                     maxPoolSize,
                     keepAdditionalThreadsAliveTime,
                     TimeUnit.MILLISECONDS,
-                    new ArrayBlockingQueue<>(64));
+                    new ArrayBlockingQueue<>(512));
 
             while(true) {
                 logger.info("Waiting for request");
                 try {
                     Socket client = server.accept();
                     logger.info("Client port is: " + client.getPort());
-                    logger.info("Client local port is: " + client.getLocalPort());
-                    logger.info("Server local port is: " + server.getLocalPort());
+                    logger.info("Server port is: " + server.getLocalPort());
                     logger.info("Processing request");
                     threadPoolExecutor.submit(new ServeRequest(client));
                 } catch(IOException e) {
@@ -86,8 +83,6 @@ public class DictionaryServer {
             try (Socket clientSocket = socket) {
 
                 logger.info("Serving client request on Thread {}", Thread.currentThread().getName());
-
-                //Do your logic here. You have the `socket` available to read/write data.
                 // Input stream
                 DataInputStream input = new DataInputStream(clientSocket.getInputStream());
                 // Output Stream
@@ -102,11 +97,11 @@ public class DictionaryServer {
                 switch (clientRequest.operation) {
                     case ADD:
                         if (clientRequest.meanings.length > 0) {
-                            Boolean flag = dictionaryRepository.insertWord(clientRequest.word, clientRequest.meanings);
-                            if (flag) {
+                            Boolean addFlag = dictionaryRepository.insertWord(clientRequest.word, clientRequest.meanings);
+                            if (addFlag) {
                                 logger.info("Inserted {} into the dictionary", clientRequest.word);
                             } else {
-                                logger.info("Could not put {} into dicitonary", clientRequest.word);
+                                logger.info("Word {} already exists in the dictionary", clientRequest.word);
                             }
                         } else {
                             logger.error("No meanings provided to add into dictionary");
@@ -116,19 +111,35 @@ public class DictionaryServer {
                     case QUERY:
                         try {
                             DictionaryEntry entry = dictionaryRepository.queryWord(clientRequest.word);
+                            if (entry == null) {
+                                logger.info("Word {} does not exist in the dictionary", clientRequest.word);
+                                break;
+                            }
                             output.writeUTF(Codecs.objectMapper.writer().writeValueAsString(entry));
+                            logger.info("Query for word {} successfully returned meaning {}", clientRequest.word, entry.meanings);
                             break;
                         } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
+                            logger.error("Unable to deserialize to a Dictionary Entry");
+                            throw new IllegalArgumentException("Deserialization error");
                         }
                     case REMOVE:
-                        dictionaryRepository.removeWord(clientRequest.word);
+                        Boolean removeFlag = dictionaryRepository.removeWord(clientRequest.word);
+                        if (removeFlag) {
+                            logger.info("Word {} successfully removed from the dictionary", clientRequest.word);
+                        } else {
+                            logger.info("Word {} does not exist in the dictionary", clientRequest.word);
+                        }
                         break;
                     case UPDATE:
                         if (clientRequest.meanings.length > 0) {
-                            dictionaryRepository.updateWord(clientRequest.word, clientRequest.meanings);
+                            Boolean updateFlag = dictionaryRepository.updateWord(clientRequest.word, clientRequest.meanings);
+                            if (updateFlag) {
+                                logger.info("Successfully updated word {} with meanings {}", clientRequest.word, clientRequest.meanings);
+                            } else {
+                                logger.info("Word {} does not exist in the dictionary", clientRequest.word);
+                            }
                         } else {
-                            logger.error("No meanings provided to add into dictionary");
+                            logger.error("No meanings for word {} provided to add into dictionary", clientRequest.word);
                             throw new IllegalArgumentException("Missing meanings");
                         }
                         break;
