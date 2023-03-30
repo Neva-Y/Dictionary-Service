@@ -8,6 +8,5 @@ public class Versions {
     public static final String SPRING_CLOUD_VERSION = "2021.0.5";
     public static final String SPRING_CONTEXT_VERSION = "5.3.23";
     public static final String SPRING_DEPENDENCY_MANAGEMENT_VERSION = "1.0.12.RELEASE";
-    public static final String IO_VAVR_VERSION = "0.10.2";
     public static final String JACKSON_VERSION = "2.14.2";
 }

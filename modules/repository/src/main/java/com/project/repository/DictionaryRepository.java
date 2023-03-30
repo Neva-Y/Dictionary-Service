@@ -1,8 +1,6 @@
 package com.project.repository;
 
-import com.project.repository.common.DictionaryError;
 import com.project.repository.dictionary.DictionaryEntry;
-import io.vavr.control.Either;
 
 import java.util.HashMap;
 import java.util.List;
