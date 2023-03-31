@@ -29,8 +29,7 @@ public class DictionaryClientQuery {
             System.out.println("Data sent to Server--> " + sendData);
             output.flush();
 
-            while(true)
-            {
+            while(true) {
                 if(input.available()>0) {
                     DictionaryEntry entry = Codecs.objectMapper.reader().readValue(input.readUTF(), DictionaryEntry.class);
                     System.out.println("Word is " + entry.word + " with meanings " + Arrays.toString(entry.meanings));

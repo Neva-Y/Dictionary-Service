@@ -16,11 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.IllegalFormatConversionException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @SpringBootApplication(scanBasePackages={"com.project"})
 @Configuration
@@ -63,13 +59,21 @@ public class DictionaryServer {
                     logger.info("Client port is: " + client.getPort());
                     logger.info("Server port is: " + server.getLocalPort());
                     logger.info("Processing request");
-                    threadPoolExecutor.submit(new ServeRequest(client));
+                    Future<?> future = threadPoolExecutor.submit(new ServeRequest(client));
+                    future.isDone();
+                    try {
+                        future.get();
+                    } catch (ExecutionException e) {
+                        logger.error("Error executing the request", e);
+                    } catch (InterruptedException e) {
+                        logger.error("Error from interrupted thread", e);
+                    }
                 } catch(IOException e) {
-                    logger.info("Error accepting connection", e);
+                    logger.error("Error accepting connection", e);
                 }
             }
         }catch(IOException e) {
-            logger.info("Error starting Server on " + port, e);
+            logger.error("Error starting Server on " + port, e);
         }
     }
     static class ServeRequest implements Runnable {
@@ -107,16 +111,18 @@ public class DictionaryServer {
                             logger.error("No meanings provided to add into dictionary");
                             throw new IllegalArgumentException("Missing meanings");
                         }
+                        output.writeUTF(Boolean.TRUE.toString());
                         break;
                     case QUERY:
                         try {
                             DictionaryEntry entry = dictionaryRepository.queryWord(clientRequest.word);
                             if (entry == null) {
                                 logger.info("Word {} does not exist in the dictionary", clientRequest.word);
+                                output.writeUTF(Boolean.TRUE.toString());
                                 break;
                             }
-                            output.writeUTF(Codecs.objectMapper.writer().writeValueAsString(entry));
                             logger.info("Query for word {} successfully returned meaning {}", clientRequest.word, entry.meanings);
+                            output.writeUTF(Codecs.objectMapper.writer().writeValueAsString(entry));
                             break;
                         } catch (JsonProcessingException e) {
                             logger.error("Unable to deserialize to a Dictionary Entry");
@@ -129,6 +135,7 @@ public class DictionaryServer {
                         } else {
                             logger.info("Word {} does not exist in the dictionary", clientRequest.word);
                         }
+                        output.writeUTF(Boolean.TRUE.toString());
                         break;
                     case UPDATE:
                         if (clientRequest.meanings.length > 0) {
@@ -142,9 +149,11 @@ public class DictionaryServer {
                             logger.error("No meanings for word {} provided to add into dictionary", clientRequest.word);
                             throw new IllegalArgumentException("Missing meanings");
                         }
+                        output.writeUTF(Boolean.TRUE.toString());
                         break;
                     default:
                         logger.error("Unexpected operation requested from client {}", clientRequest.operation);
+                        output.writeUTF(Boolean.TRUE.toString());
                         throw new IllegalArgumentException("Unexpected operation");
                 }
 

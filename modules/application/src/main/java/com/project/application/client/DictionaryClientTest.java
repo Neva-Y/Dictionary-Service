@@ -1,9 +1,12 @@
 package com.project.application.client;
 
+import com.project.application.server.DictionaryServer;
 import com.project.application.util.Codecs;
 import com.project.application.util.Fixtures;
 import com.project.repository.dictionary.DictionaryEntry;
 import com.project.repository.dictionary.DictionaryOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -34,16 +37,24 @@ public class DictionaryClientTest {
                 System.out.println("Data sent to Server--> " + sendData);
                 output.flush();
 
-                // Return if there is a query response
-                if (input.available() > 0) {
-                    DictionaryEntry entry = Codecs.objectMapper.reader().readValue(input.readUTF(), DictionaryEntry.class);
-                    System.out.println("Word is " + entry.word + " with meanings " + Arrays.toString(entry.meanings));
+                // Wait till the task is completed, making this a per-request thread as thread closes upon
+                // receiving a response from the server
+                boolean isFutureIncomplete = Boolean.TRUE;
+                while (isFutureIncomplete) {
+                    if (input.available() > 0) {
+                        String response = input.readUTF();
+                        if (!response.equals(Boolean.TRUE.toString())) {
+                            DictionaryEntry entry = Codecs.objectMapper.reader().readValue(response, DictionaryEntry.class);
+                            System.out.println("Word is " + entry.word + " with meanings " + Arrays.toString(entry.meanings));
+                        }
+                        isFutureIncomplete = Boolean.FALSE;
+                    }
                 }
 
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                System.out.println("Error, IP Address of the host is invalid");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Error completing client request");
             }
         }
     }
