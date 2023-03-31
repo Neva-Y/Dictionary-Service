@@ -11,7 +11,7 @@ public class Fixtures {
             new EasyRandomParameters()
                     .seed(RANDOMISATION_SEED)
                     .collectionSizeRange(1, 5)
-                    .stringLengthRange(1, 1)
+                    .stringLengthRange(1, 10)
                     .scanClasspathForConcreteTypes(true)
     );
 }

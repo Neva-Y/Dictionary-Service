@@ -50,7 +50,6 @@ public class DictionaryClientTest {
                         isFutureIncomplete = Boolean.FALSE;
                     }
                 }
-
             } catch (UnknownHostException e) {
                 System.out.println("Error, IP Address of the host is invalid");
             } catch (IOException e) {
