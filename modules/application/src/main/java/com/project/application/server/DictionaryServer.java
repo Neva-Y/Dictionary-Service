@@ -59,15 +59,7 @@ public class DictionaryServer {
                     logger.info("Client port is: " + client.getPort());
                     logger.info("Server port is: " + server.getLocalPort());
                     logger.info("Processing request");
-                    Future<?> future = threadPoolExecutor.submit(new ServeRequest(client));
-                    future.isDone();
-                    try {
-                        future.get();
-                    } catch (ExecutionException e) {
-                        logger.error("Error executing the request", e);
-                    } catch (InterruptedException e) {
-                        logger.error("Error from interrupted thread", e);
-                    }
+                    threadPoolExecutor.submit(new ServeRequest(client));
                 } catch(IOException e) {
                     logger.error("Error accepting connection", e);
                 }
