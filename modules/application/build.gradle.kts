@@ -1,5 +1,6 @@
 plugins {
     id("idea")
+    id("java")
     id("java-library")
     id("java-test-fixtures")
     id("org.springframework.boot")
@@ -7,6 +8,8 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven("https://www.jetbrains.com/intellij-repository/releases")
+    maven ("https://jetbrains.bintray.com/intellij-third-party-dependencies")
 }
 
 dependencies {
@@ -21,6 +24,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework:spring-context:${Versions.SPRING_CONTEXT_VERSION}")
     implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.JACKSON_VERSION}")
+
+    compileOnly("com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30")
 }
 
 springBoot {
