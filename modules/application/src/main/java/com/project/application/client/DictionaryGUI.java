@@ -157,19 +157,10 @@ public class DictionaryGUI extends JFrame {
             System.out.println("Data sent to Server--> " + request);
             output.flush();
 
-            // Wait till the task is completed, making this a per-request thread as thread closes upon
-            // receiving a response from the server
-            boolean isFutureIncomplete = Boolean.TRUE;
-            while (isFutureIncomplete) {
+            // Wait for server response
+            while (true) {
                 if (input.available() > 0) {
                     return input.readUTF();
-//                    String response = input.readUTF();
-//                    if (!response.equals(Boolean.TRUE.toString())) {
-//                        DictionaryEntry entry = Codecs.objectMapper.reader().readValue(response, DictionaryEntry.class);
-//                        System.out.println("Word is " + entry.word + " with meanings " + Arrays.toString(entry.meanings));
-//                        return entry;
-//                    }
-//                    isFutureIncomplete = Boolean.FALSE;
                 }
             }
         } catch (UnknownHostException e) {
