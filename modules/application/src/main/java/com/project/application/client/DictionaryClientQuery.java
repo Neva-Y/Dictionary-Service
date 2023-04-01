@@ -35,7 +35,7 @@ public class DictionaryClientQuery {
             while (isFutureIncomplete) {
                 if (input.available() > 0) {
                     String response = input.readUTF();
-                    if (!response.equals(Boolean.TRUE.toString())) {
+                    if (!response.equals(Boolean.TRUE.toString()) && !response.equals(Boolean.FALSE.toString())) {
                         DictionaryEntry entry = Codecs.objectMapper.reader().readValue(response, DictionaryEntry.class);
                         System.out.println("Word is " + entry.word + " with meanings " + Arrays.toString(entry.meanings));
                     }
