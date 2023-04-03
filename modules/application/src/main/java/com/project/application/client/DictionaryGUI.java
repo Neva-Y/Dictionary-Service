@@ -3,6 +3,7 @@ package com.project.application.client;
 import javax.swing.*;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.project.application.common.ServerError;
 import com.project.application.util.Codecs;
 import com.project.repository.dictionary.DictionaryEntry;
 import com.project.repository.dictionary.DictionaryOperation;
@@ -15,6 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class DictionaryGUI extends JFrame {
@@ -72,48 +74,52 @@ public class DictionaryGUI extends JFrame {
                 wordResponse.setVisible(false);
                 meaningResponse.setVisible(false);
                 responseStatus.setVisible(true);
-                String selectedAction = Objects.requireNonNull(action.getSelectedItem()).toString();
                 String[] noMeanings = {};
+                String[] meaningsList;
                 DictionaryOperation request;
                 String response;
 
-                switch (selectedAction.toLowerCase()) {
-                    case "add":
+                switch (Objects.requireNonNull(action.getSelectedItem()).toString()) {
+                    case "Add":
                         if (meanings.getText().length() > 0) {
-                            String[] meaningsList = meanings.getText().split(System.lineSeparator());
+                            meaningsList = meanings.getText().split(System.lineSeparator());
                             request = new DictionaryOperation(word.getText(), meaningsList, DictionaryOperation.Operation.ADD);
-                            response = sendRequest(request);
-                            if (Objects.equals(response, Boolean.TRUE.toString())) {
-                                responseStatus.setText("Successfully added word " + word.getText() + " to dictionary");
-                            } else if (Objects.equals(response, Boolean.FALSE.toString())) {
-                                responseStatus.setText("Word " + word.getText() + " already exists in dictionary");
-                            } else {
-                                responseStatus.setText("Unable to connect to dictionary server");
-                            }
                         } else {
-                            responseStatus.setText("No meaning provided for word " + word.getText());
+                            request = new DictionaryOperation(word.getText(), noMeanings, DictionaryOperation.Operation.ADD);
+                        }
+                        response = sendRequest(request);
+                        if (Objects.equals(response, Boolean.TRUE.toString())) {
+                            responseStatus.setText("Successfully added word " + word.getText() + " to dictionary");
+                        } else if (response == null) {
+                            responseStatus.setText("Unable to connect to the dictionary server");
+                        } else {
+                            responseStatus.setText(ServerError.ErrorResponse(response));
                         }
                         break;
-                    case "update":
+                    case "Update":
                         if (meanings.getText().length() > 0) {
-                            String[] meaningsList = meanings.getText().split(System.lineSeparator());
+                            meaningsList = meanings.getText().split(System.lineSeparator());
                             request = new DictionaryOperation(word.getText(), meaningsList, DictionaryOperation.Operation.UPDATE);
-                            response = sendRequest(request);
-                            if (Objects.equals(response, Boolean.TRUE.toString())) {
-                                responseStatus.setText("Successfully updated word " + word.getText() + " in dictionary");
-                            } else if (Objects.equals(response, Boolean.FALSE.toString())) {
-                                responseStatus.setText("Word " + word.getText() + " does not exist in dictionary");
-                            } else {
-                                responseStatus.setText("Unable to connect to dictionary server");
-                            }
                         } else {
-                            responseStatus.setText("No meaning provided for word " + word.getText());
+                            request = new DictionaryOperation(word.getText(), noMeanings, DictionaryOperation.Operation.UPDATE);
+                        }
+                        response = sendRequest(request);
+                        if (Objects.equals(response, Boolean.TRUE.toString())) {
+                            responseStatus.setText("Successfully updated word " + word.getText() + " in dictionary");
+                        } else if (response == null) {
+                            responseStatus.setText("Unable to connect to the dictionary server");
+                        } else {
+                            responseStatus.setText(ServerError.ErrorResponse(response));
                         }
                         break;
-                    case "query":
+                    case "Query":
                         request = new DictionaryOperation(word.getText(), noMeanings, DictionaryOperation.Operation.QUERY);
                         response = sendRequest(request);
-                        if (!Objects.equals(response, Boolean.FALSE.toString())) {
+                        if (response == null) {
+                            responseStatus.setText("Unable to connect to the dictionary server");
+                        } else if (Arrays.toString(ServerError.ErrorCodes.values()).contains(response)) {
+                            responseStatus.setText(ServerError.ErrorResponse(response));
+                        } else {
                             try {
                                 DictionaryEntry entry = Codecs.objectMapper.reader().readValue(response, DictionaryEntry.class);
                                 responseStatus.setText("Successfully queried word " + word.getText());
@@ -124,22 +130,23 @@ public class DictionaryGUI extends JFrame {
                                 meaningResponse.setVisible(true);
                                 meaningResponse.setText(String.join("\n", entry.meanings));
                             } catch (IOException ex) {
-                                responseStatus.setText("Unable to connect to dictionary server");
+                                responseStatus.setText("Unable to deserialize the query word request");
                             }
-                        } else {
-                            responseStatus.setText("Word " + word.getText() + " does not exist in dictionary");
                         }
                         break;
-                    case "remove":
+                    case "Remove":
                         request = new DictionaryOperation(word.getText(), noMeanings, DictionaryOperation.Operation.REMOVE);
                         response = sendRequest(request);
                         if (Objects.equals(response, Boolean.TRUE.toString())) {
                             responseStatus.setText("Successfully removed word " + word.getText() + " from dictionary");
-                        } else if (Objects.equals(response, Boolean.FALSE.toString())) {
-                            responseStatus.setText("Word " + word.getText() + " does not exist in dictionary");
-                        } else {
+                        } else if (response == null) {
                             responseStatus.setText("Unable to connect to dictionary server");
+                        } else {
+                            responseStatus.setText(ServerError.ErrorResponse(response));
                         }
+                        break;
+                    default:
+                        responseStatus.setText("Unexpected action requested, no request sent");
                         break;
                 }
             }
