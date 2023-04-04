@@ -90,8 +90,11 @@ public class DictionaryGUI extends JFrame {
                             responseStatus.setText("Successfully added word " + word.getText() + " to dictionary");
                         } else if (response == null) {
                             responseStatus.setText("Unable to connect to the dictionary server");
+                            JOptionPane.showMessageDialog(null, "Unable to connect to the dictionary server");
+
                         } else {
                             responseStatus.setText(ServerError.ErrorResponse(response));
+                            JOptionPane.showMessageDialog(null, ServerError.ErrorResponse(response));
                         }
                         break;
                     case "Update":
@@ -102,8 +105,10 @@ public class DictionaryGUI extends JFrame {
                             responseStatus.setText("Successfully updated word " + word.getText() + " in dictionary");
                         } else if (response == null) {
                             responseStatus.setText("Unable to connect to the dictionary server");
+                            JOptionPane.showMessageDialog(null, "Unable to connect to the dictionary server");
                         } else {
                             responseStatus.setText(ServerError.ErrorResponse(response));
+                            JOptionPane.showMessageDialog(null, ServerError.ErrorResponse(response));
                         }
                         break;
                     case "Query":
@@ -111,9 +116,10 @@ public class DictionaryGUI extends JFrame {
                         response = sendRequest(request);
                         if (response == null) {
                             responseStatus.setText("Unable to connect to the dictionary server");
+                            JOptionPane.showMessageDialog(null, "Unable to connect to the dictionary server");
                         } else if (Arrays.toString(ServerError.ErrorCodes.values()).contains(response)) {
                             responseStatus.setText(ServerError.ErrorResponse(response));
-                            // JOptionPane.showMessageDialog(null, ServerError.ErrorResponse(response));
+                            JOptionPane.showMessageDialog(null, ServerError.ErrorResponse(response));
                         } else {
                             try {
                                 DictionaryEntry entry = Codecs.objectMapper.reader().readValue(response, DictionaryEntry.class);
@@ -126,6 +132,7 @@ public class DictionaryGUI extends JFrame {
                                 meaningResponse.setText(String.join("\n", entry.meanings));
                             } catch (IOException ex) {
                                 responseStatus.setText("Unable to deserialize the query word request");
+                                JOptionPane.showMessageDialog(null, "Unable to deserialize the query word request");
                             }
                         }
                         break;
@@ -135,13 +142,16 @@ public class DictionaryGUI extends JFrame {
                         if (Objects.equals(response, Boolean.TRUE.toString())) {
                             responseStatus.setText("Successfully removed word " + word.getText() + " from dictionary");
                         } else if (response == null) {
-                            responseStatus.setText("Unable to connect to dictionary server");
+                            responseStatus.setText("Unable to connect to the dictionary server");
+                            JOptionPane.showMessageDialog(null, "Unable to connect to the dictionary server");
                         } else {
                             responseStatus.setText(ServerError.ErrorResponse(response));
+                            JOptionPane.showMessageDialog(null, ServerError.ErrorResponse(response));
                         }
                         break;
                     default:
                         responseStatus.setText("Unexpected action requested, no request sent");
+                        JOptionPane.showMessageDialog(null, "Unexpected action requested, no request sent");
                         break;
                 }
             }

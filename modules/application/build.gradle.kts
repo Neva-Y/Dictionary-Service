@@ -34,6 +34,6 @@ springBoot {
 
 tasks {
     bootJar {
-        archiveClassifier.set("boot")
+        archiveBaseName.set("DictionaryServer")
     }
 }
