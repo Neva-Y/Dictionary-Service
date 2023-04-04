@@ -81,12 +81,8 @@ public class DictionaryGUI extends JFrame {
 
                 switch (Objects.requireNonNull(action.getSelectedItem()).toString()) {
                     case "Add":
-                        if (meanings.getText().length() > 0) {
-                            meaningsList = meanings.getText().split(System.lineSeparator());
-                            request = new DictionaryOperation(word.getText(), meaningsList, DictionaryOperation.Operation.ADD);
-                        } else {
-                            request = new DictionaryOperation(word.getText(), noMeanings, DictionaryOperation.Operation.ADD);
-                        }
+                        meaningsList = meanings.getText().split(System.lineSeparator());
+                        request = new DictionaryOperation(word.getText(), meaningsList, DictionaryOperation.Operation.ADD);
                         response = sendRequest(request);
                         if (Objects.equals(response, Boolean.TRUE.toString())) {
                             responseStatus.setText("Successfully added word " + word.getText() + " to dictionary");
@@ -97,12 +93,8 @@ public class DictionaryGUI extends JFrame {
                         }
                         break;
                     case "Update":
-                        if (meanings.getText().length() > 0) {
-                            meaningsList = meanings.getText().split(System.lineSeparator());
-                            request = new DictionaryOperation(word.getText(), meaningsList, DictionaryOperation.Operation.UPDATE);
-                        } else {
-                            request = new DictionaryOperation(word.getText(), noMeanings, DictionaryOperation.Operation.UPDATE);
-                        }
+                        meaningsList = meanings.getText().split(System.lineSeparator());
+                        request = new DictionaryOperation(word.getText(), meaningsList, DictionaryOperation.Operation.UPDATE);
                         response = sendRequest(request);
                         if (Objects.equals(response, Boolean.TRUE.toString())) {
                             responseStatus.setText("Successfully updated word " + word.getText() + " in dictionary");

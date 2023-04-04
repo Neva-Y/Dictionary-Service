@@ -17,6 +17,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 @SpringBootApplication(scanBasePackages={"com.project"})
@@ -87,13 +88,15 @@ public class DictionaryServer {
 
                 DictionaryOperation clientRequest = Codecs.objectMapper.reader().readValue(input.readUTF(), DictionaryOperation.class);
 
+                String [] emptyMeaning = {""};
+
                 if (clientRequest.word.isBlank()) {
                     logger.error("No word provided from client");
                     output.writeUTF(ServerError.ErrorCodes.WORD_NOT_PROVIDED.toString());
                 } else {
                     switch (clientRequest.operation) {
                         case ADD:
-                            if (clientRequest.meanings.length > 0) {
+                            if (!Arrays.equals(clientRequest.meanings, emptyMeaning)) {
                                 Boolean addFlag = dictionaryRepository.insertWord(clientRequest.word, clientRequest.meanings);
                                 if (addFlag) {
                                     logger.info("Inserted {} into the dictionary", clientRequest.word);
@@ -134,7 +137,7 @@ public class DictionaryServer {
                             }
                             break;
                         case UPDATE:
-                            if (clientRequest.meanings.length > 0) {
+                            if (!Arrays.equals(clientRequest.meanings, emptyMeaning)) {
                                 Boolean updateFlag = dictionaryRepository.updateWord(clientRequest.word, clientRequest.meanings);
                                 if (updateFlag) {
                                     logger.info("Successfully updated word {} with meanings {}", clientRequest.word, clientRequest.meanings);
