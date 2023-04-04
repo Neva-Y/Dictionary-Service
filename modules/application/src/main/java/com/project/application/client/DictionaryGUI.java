@@ -49,6 +49,9 @@ public class DictionaryGUI extends JFrame {
         wordResponse.setVisible(false);
         wordResponseLabel.setVisible(false);
         meaningResponse.setVisible(false);
+        wordResponse.setEditable(false);
+        meaningResponse.setEditable(false);
+        responseStatus.setEditable(false);
         action.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -59,11 +62,10 @@ public class DictionaryGUI extends JFrame {
                 responseStatus.setText("");
                 String selectedAction = Objects.requireNonNull(action.getSelectedItem()).toString();
                 if (selectedAction.equalsIgnoreCase("Query") || selectedAction.equalsIgnoreCase("Remove")) {
-                    meanings.setVisible(false);
-                    meaningLabel.setVisible(false);
+                    meanings.setText("");
+                    meanings.setEditable(false);
                 } else {
-                    meanings.setVisible(true);
-                    meaningLabel.setVisible(true);
+                    meanings.setEditable(true);
                 }
             }
         });
@@ -111,6 +113,7 @@ public class DictionaryGUI extends JFrame {
                             responseStatus.setText("Unable to connect to the dictionary server");
                         } else if (Arrays.toString(ServerError.ErrorCodes.values()).contains(response)) {
                             responseStatus.setText(ServerError.ErrorResponse(response));
+                            // JOptionPane.showMessageDialog(null, ServerError.ErrorResponse(response));
                         } else {
                             try {
                                 DictionaryEntry entry = Codecs.objectMapper.reader().readValue(response, DictionaryEntry.class);
