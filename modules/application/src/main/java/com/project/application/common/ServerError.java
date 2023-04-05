@@ -4,6 +4,7 @@ public class ServerError {
     public enum ErrorCodes {
         WORD_NOT_PROVIDED,
         WORD_NOT_FOUND,
+        INVALID_WORD_FORMAT,
         MEANING_NOT_PROVIDED,
         WORD_ALREADY_EXISTS,
         UNEXPECTED_OPERATION
@@ -15,6 +16,8 @@ public class ServerError {
                 return "No word specified to the operation";
             case "WORD_NOT_FOUND":
                 return "Given word does not exist in the dictionary";
+            case "INVALID_WORD_FORMAT":
+                return "Given word is in an invalid format";
             case "MEANING_NOT_PROVIDED":
                 return "No meaning provided for the given word";
             case "WORD_ALREADY_EXISTS":

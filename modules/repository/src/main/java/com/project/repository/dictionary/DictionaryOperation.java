@@ -5,7 +5,6 @@ import org.springframework.boot.jackson.JsonComponent;
 public class DictionaryOperation {
     public String word;
     public String[] meanings;
-
     public Operation operation;
 
     public DictionaryOperation() {

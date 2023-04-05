@@ -107,15 +107,21 @@ public class DictionaryServer {
                     switch (clientRequest.operation) {
                         case ADD:
                             if (!Arrays.equals(clientRequest.meanings, emptyMeaning)) {
-                                Boolean addFlag = dictionaryRepository
-                                        .insertWord(clientRequest.word, clientRequest.meanings);
-                                if (addFlag) {
-                                    logger.info("Inserted word {} into the dictionary with meanings {}",
-                                            clientRequest.word, clientRequest.meanings);
-                                    output.writeUTF(Boolean.TRUE.toString());
+                                if (clientRequest.word.contains(" ")) {
+                                    logger.error("Word {} contains an illegal space character", clientRequest.word);
+                                    output.writeUTF(ServerError.ErrorCodes.INVALID_WORD_FORMAT.toString());
+                                    break;
                                 } else {
-                                    logger.info("Word {} already exists in the dictionary", clientRequest.word);
-                                    output.writeUTF(ServerError.ErrorCodes.WORD_ALREADY_EXISTS.toString());
+                                    Boolean addFlag = dictionaryRepository
+                                            .insertWord(clientRequest.word, clientRequest.meanings);
+                                    if (addFlag) {
+                                        logger.info("Inserted word {} into the dictionary with meanings {}",
+                                                clientRequest.word, clientRequest.meanings);
+                                        output.writeUTF(Boolean.TRUE.toString());
+                                    } else {
+                                        logger.info("Word {} already exists in the dictionary", clientRequest.word);
+                                        output.writeUTF(ServerError.ErrorCodes.WORD_ALREADY_EXISTS.toString());
+                                    }
                                 }
                             } else {
                                 logger.error("No meanings provided to add into dictionary");
