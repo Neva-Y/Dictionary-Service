@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 @Repository
 public class DictionaryRepositoryImpl implements DictionaryRepository {
-    private static final String COMMA_DELIMITER = "\",\"";
+    private static final String COMMA_QUOTES_DELIMITER = "\",\"";
     public final HashMap<String, String[]> dictionary = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(DictionaryRepositoryImpl.class);
     @Override
@@ -83,7 +83,7 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(COMMA_DELIMITER);
+                String[] values = line.split(COMMA_QUOTES_DELIMITER);
                 for (int i = 0; i < values.length; i++) {
                     values[i] = values[i].replace("\"", "");
                 }
