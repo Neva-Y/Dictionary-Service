@@ -1,6 +1,7 @@
 public class Versions {
     public static final String ANTLR_RUNTIME_VERSION = "4.9.3";
     public static final String APACHE_LOGGING_LOG4J_VERSION = "2.18.0";
+    public static final String APACHE_COMMONS_LANG = "3.6";
     public static final String EASY_RANDOM_VERSION = "5.0.0";
     public static final String FLYWAY_DB_VERSION = "9.0.4";
     public static final String JAVA_11_VERSION = "11";

@@ -35,7 +35,7 @@ public class DictionaryServer {
         logger.info("Application is up!");
         if (args.length == 1) {
             if (dictionaryRepository.initialiseDictionary(args[0])) {
-                logger.info("Successfully initialised dictionary!");
+                logger.info("Successfully initialised dictionary from file {}", args[0]);
             } else {
                 logger.info("Could not use the dictionary file provided for initialisation");
             }
@@ -53,8 +53,8 @@ public class DictionaryServer {
             server.setReuseAddress(true);
 
             // Setup Thread Pool Executor to handle the client requests
-            int corePoolSize = 30;
-            int maxPoolSize = 50;
+            int corePoolSize = 10;
+            int maxPoolSize = 15;
             int keepAdditionalThreadsAliveTime = 5000;
             ExecutorService threadPoolExecutor = new ThreadPoolExecutor(
                     corePoolSize,
@@ -95,7 +95,8 @@ public class DictionaryServer {
                 // Output Stream
                 DataOutputStream output = new DataOutputStream(clientSocket.getOutputStream());
 
-                DictionaryOperation clientRequest = Codecs.objectMapper.reader().readValue(input.readUTF(), DictionaryOperation.class);
+                DictionaryOperation clientRequest = Codecs.objectMapper.reader()
+                        .readValue(input.readUTF(), DictionaryOperation.class);
 
                 String [] emptyMeaning = {""};
 
@@ -106,9 +107,11 @@ public class DictionaryServer {
                     switch (clientRequest.operation) {
                         case ADD:
                             if (!Arrays.equals(clientRequest.meanings, emptyMeaning)) {
-                                Boolean addFlag = dictionaryRepository.insertWord(clientRequest.word, clientRequest.meanings);
+                                Boolean addFlag = dictionaryRepository
+                                        .insertWord(clientRequest.word, clientRequest.meanings);
                                 if (addFlag) {
-                                    logger.info("Inserted {} into the dictionary with meanings {}", clientRequest.word, clientRequest.meanings);
+                                    logger.info("Inserted word {} into the dictionary with meanings {}",
+                                            clientRequest.word, clientRequest.meanings);
                                     output.writeUTF(Boolean.TRUE.toString());
                                 } else {
                                     logger.info("Word {} already exists in the dictionary", clientRequest.word);
@@ -128,7 +131,8 @@ public class DictionaryServer {
                                     output.writeUTF(ServerError.ErrorCodes.WORD_NOT_FOUND.toString());
                                     break;
                                 }
-                                logger.info("Query for word {} successfully returned meaning {}", clientRequest.word, entry.meanings);
+                                logger.info("Query for word {} successfully returned meaning {}",
+                                        clientRequest.word, entry.meanings);
                                 output.writeUTF(Codecs.objectMapper.writer().writeValueAsString(entry));
                                 break;
                             } catch (JsonProcessingException e) {
@@ -147,9 +151,11 @@ public class DictionaryServer {
                             break;
                         case UPDATE:
                             if (!Arrays.equals(clientRequest.meanings, emptyMeaning)) {
-                                Boolean updateFlag = dictionaryRepository.updateWord(clientRequest.word, clientRequest.meanings);
+                                Boolean updateFlag = dictionaryRepository
+                                        .updateWord(clientRequest.word, clientRequest.meanings);
                                 if (updateFlag) {
-                                    logger.info("Successfully updated word {} with meanings {}", clientRequest.word, clientRequest.meanings);
+                                    logger.info("Successfully updated word {} with meanings {}",
+                                            clientRequest.word, clientRequest.meanings);
                                     output.writeUTF(Boolean.TRUE.toString());
                                 } else {
                                     logger.info("Word {} does not exist in the dictionary", clientRequest.word);
@@ -172,10 +178,10 @@ public class DictionaryServer {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    logger.info("Error closing client connection", e);
+                    logger.error("Error closing client connection", e);
                 }
             } catch (IOException e) {
-                logger.info("Error creating client connection", e);
+                logger.error("Error creating client connection", e);
             }
         }
     }

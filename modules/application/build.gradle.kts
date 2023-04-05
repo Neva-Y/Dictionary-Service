@@ -24,16 +24,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework:spring-context:${Versions.SPRING_CONTEXT_VERSION}")
     implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.JACKSON_VERSION}")
+    implementation("com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30")
 
     compileOnly("com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30")
 }
 
 springBoot {
-    mainClass.set("com.project.application.server.DictionaryServer")
+//    mainClass.set("com.project.application.server.DictionaryServer")
+    mainClass.set("com.project.application.client.DictionaryClient")
 }
 
 tasks {
     bootJar {
-        archiveBaseName.set("DictionaryServer")
+//        archiveBaseName.set("DictionaryServer")
+        archiveBaseName.set("DictionaryClient")
     }
 }
