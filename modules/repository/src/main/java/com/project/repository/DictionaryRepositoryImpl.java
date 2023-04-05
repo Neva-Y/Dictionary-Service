@@ -21,10 +21,10 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
     @Override
     public synchronized Boolean insertWord(String word, String[] meanings) {
         try {
-            if (dictionary.containsKey(StringUtils.capitalize(word))) {
+            if (dictionary.containsKey(word.toLowerCase())) {
                 return Boolean.FALSE;
             } else {
-                dictionary.put(StringUtils.capitalize(word), meanings);
+                dictionary.put(word.toLowerCase(), meanings);
                 return Boolean.TRUE;
             }
         } catch (Exception e) {
@@ -36,8 +36,8 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
     @Override
     public synchronized Boolean updateWord(String word, String[] meanings) {
         try {
-            if (dictionary.containsKey(StringUtils.capitalize(word))) {
-                dictionary.put(StringUtils.capitalize(word), meanings);
+            if (dictionary.containsKey(word.toLowerCase())) {
+                dictionary.put(word.toLowerCase(), meanings);
                 return Boolean.TRUE;
             } else {
                 return Boolean.FALSE;
@@ -51,8 +51,8 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
     @Override
     public synchronized Boolean removeWord(String word) {
         try {
-            if (dictionary.containsKey(StringUtils.capitalize(word))) {
-                dictionary.remove(StringUtils.capitalize(word));
+            if (dictionary.containsKey(word.toLowerCase())) {
+                dictionary.remove(word.toLowerCase());
                 return Boolean.TRUE;
             } else {
                 return Boolean.FALSE;
@@ -66,9 +66,9 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
     @Override
     public DictionaryEntry queryWord(String word) {
         try {
-            String[] meanings = dictionary.getOrDefault(StringUtils.capitalize(word), null);
+            String[] meanings = dictionary.getOrDefault(word.toLowerCase(), null);
             if (meanings != null && meanings.length > 0) {
-                return new DictionaryEntry(StringUtils.capitalize(word), meanings);
+                return new DictionaryEntry(StringUtils.capitalize(word.toLowerCase()), meanings);
             } else {
                 return null;
             }
@@ -90,9 +90,9 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
                 }
                 // Make sure word has a meaning and the word does not contain spaces
                 if (values.length > 1 && !values[0].contains(" ")) {
-                    if(insertWord(StringUtils.capitalize(values[0]), Arrays.copyOfRange(values, 1, values.length))) {
+                    if(insertWord(values[0].toLowerCase(), Arrays.copyOfRange(values, 1, values.length))) {
                         logger.info("From {}: inserted word {} into the dictionary with meanings {}", fileName,
-                                values[0], Arrays.copyOfRange(values, 1, values.length));
+                                StringUtils.capitalize(values[0].toLowerCase()), Arrays.copyOfRange(values, 1, values.length));
                     }
                 }
             }
