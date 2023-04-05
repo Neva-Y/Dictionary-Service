@@ -79,7 +79,7 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
     }
 
     @Override
-    public synchronized Boolean initialiseDictionary(String fileName) {
+    public Boolean initialiseDictionary(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
