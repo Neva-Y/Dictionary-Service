@@ -33,6 +33,12 @@ public class DictionaryServer {
     public static void main(String[] args) {
         new SpringApplicationBuilder(DictionaryServer.class).run(args);
         logger.info("Application is up!");
+        if (args.length == 1) {
+            dictionaryRepository.initialiseDictionary(args[0]);
+            logger.info("Successfully initialised dictionary!");
+        } else {
+            logger.info("No dictionary file provided for initialisation");
+        }
         runServer();
     }
 

@@ -15,4 +15,5 @@ public interface DictionaryRepository {
 
     public DictionaryEntry queryWord(String word);
 
+    public Boolean initialiseDictionary(String fileName);
 }
