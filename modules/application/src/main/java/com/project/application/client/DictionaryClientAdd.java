@@ -1,7 +1,6 @@
 package com.project.application.client;
 
 import com.project.application.util.Codecs;
-import com.project.application.util.Fixtures;
 import com.project.repository.dictionary.DictionaryEntry;
 import com.project.repository.dictionary.DictionaryOperation;
 

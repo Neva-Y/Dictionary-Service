@@ -78,6 +78,7 @@
         </constraints>
         <properties>
           <editable value="true"/>
+          <lineWrap value="true"/>
         </properties>
       </component>
       <component id="b7a4d" class="javax.swing.JSeparator">
@@ -122,7 +123,9 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <lineWrap value="true"/>
+        </properties>
       </component>
       <component id="6fd79" class="javax.swing.JTextField" binding="wordResponse">
         <constraints>

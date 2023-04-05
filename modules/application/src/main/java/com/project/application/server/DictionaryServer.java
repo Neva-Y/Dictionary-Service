@@ -34,8 +34,11 @@ public class DictionaryServer {
         new SpringApplicationBuilder(DictionaryServer.class).run(args);
         logger.info("Application is up!");
         if (args.length == 1) {
-            dictionaryRepository.initialiseDictionary(args[0]);
-            logger.info("Successfully initialised dictionary!");
+            if (dictionaryRepository.initialiseDictionary(args[0])) {
+                logger.info("Successfully initialised dictionary!");
+            } else {
+                logger.info("Could not use the dictionary file provided for initialisation");
+            }
         } else {
             logger.info("No dictionary file provided for initialisation");
         }

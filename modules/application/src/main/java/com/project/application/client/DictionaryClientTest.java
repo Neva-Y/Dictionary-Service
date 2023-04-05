@@ -1,12 +1,9 @@
 package com.project.application.client;
 
-import com.project.application.server.DictionaryServer;
 import com.project.application.util.Codecs;
 import com.project.application.util.Fixtures;
 import com.project.repository.dictionary.DictionaryEntry;
 import com.project.repository.dictionary.DictionaryOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

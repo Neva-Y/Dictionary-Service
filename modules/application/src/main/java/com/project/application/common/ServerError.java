@@ -1,7 +1,5 @@
 package com.project.application.common;
 
-import java.util.Arrays;
-
 public class ServerError {
     public enum ErrorCodes {
         WORD_NOT_PROVIDED,
