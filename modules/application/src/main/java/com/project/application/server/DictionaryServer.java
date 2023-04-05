@@ -108,7 +108,7 @@ public class DictionaryServer {
                             if (!Arrays.equals(clientRequest.meanings, emptyMeaning)) {
                                 Boolean addFlag = dictionaryRepository.insertWord(clientRequest.word, clientRequest.meanings);
                                 if (addFlag) {
-                                    logger.info("Inserted {} into the dictionary", clientRequest.word);
+                                    logger.info("Inserted {} into the dictionary with meanings {}", clientRequest.word, clientRequest.meanings);
                                     output.writeUTF(Boolean.TRUE.toString());
                                 } else {
                                     logger.info("Word {} already exists in the dictionary", clientRequest.word);

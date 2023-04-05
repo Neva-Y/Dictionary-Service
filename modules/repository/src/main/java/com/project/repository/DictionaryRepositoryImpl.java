@@ -23,7 +23,6 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
             if (dictionary.containsKey(word)) {
                 return Boolean.FALSE;
             } else {
-                logger.info("Inserting word {} with meanings {}", word, meanings);
                 dictionary.put(word, meanings);
                 return Boolean.TRUE;
             }
