@@ -252,7 +252,7 @@ public class DictionaryClient extends JFrame {
         wordResponseLabel.setText("Word");
         dictionaryPanel.add(wordResponseLabel, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         meaningResponseLabel = new JLabel();
-        meaningResponseLabel.setText("Meaning");
+        meaningResponseLabel.setText("Meanings");
         dictionaryPanel.add(meaningResponseLabel, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         dictionaryGUILabel = new JLabel();
         dictionaryGUILabel.setText("Operation");
