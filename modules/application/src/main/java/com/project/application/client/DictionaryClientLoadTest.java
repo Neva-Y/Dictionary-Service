@@ -1,3 +1,7 @@
+/*
+Name: Xing Yang Goh
+ID: 1001969
+ */
 package com.project.application.client;
 
 import com.project.application.util.Codecs;

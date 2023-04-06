@@ -30,13 +30,13 @@ dependencies {
 }
 
 springBoot {
-//    mainClass.set("com.project.application.server.DictionaryServer")
-    mainClass.set("com.project.application.client.DictionaryClient")
+    mainClass.set("com.project.application.server.DictionaryServer")
+//    mainClass.set("com.project.application.client.DictionaryClient")
 }
 
 tasks {
     bootJar {
-//        archiveBaseName.set("DictionaryServer")
-        archiveBaseName.set("DictionaryClient")
+        archiveBaseName.set("DictionaryServer")
+//        archiveBaseName.set("DictionaryClient")
     }
 }
