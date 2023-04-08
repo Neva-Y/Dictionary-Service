@@ -41,7 +41,7 @@ public class DictionaryServer {
             if (dictionaryRepository.initialiseDictionary(args[0])) {
                 logger.info("Successfully initialised dictionary from file {}", args[0]);
             } else {
-                logger.info("Could not use the dictionary file provided for initialisation");
+                logger.info("Could not use the dictionary file {} provided for initialisation", args[0]);
             }
         } else {
             logger.info("No dictionary file provided for initialisation");

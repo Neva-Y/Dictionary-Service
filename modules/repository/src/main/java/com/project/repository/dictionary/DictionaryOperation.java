@@ -5,6 +5,7 @@ ID: 1001969
 package com.project.repository.dictionary;
 
 import org.springframework.boot.jackson.JsonComponent;
+
 @JsonComponent
 public class DictionaryOperation {
     public String word;

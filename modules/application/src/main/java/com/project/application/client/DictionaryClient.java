@@ -165,7 +165,7 @@ public class DictionaryClient extends JFrame {
 
     public static String sendRequest(DictionaryOperation request) {
 
-        try (Socket socket = new Socket(ip, port);) {
+        try (Socket socket = new Socket(ip, port)) {
             // Output and Input Stream
             DataInputStream input = new DataInputStream(socket.getInputStream());
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
